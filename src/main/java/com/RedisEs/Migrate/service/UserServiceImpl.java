@@ -20,4 +20,14 @@ public class UserServiceImpl implements UserService{
     public List<User> fetchAllUser() {
         return userRepository.fetchAllUser();
     }
+
+    @Override
+    public User fetchUserById(Long id) {
+        return userRepository.fetchUserById(id);
+    }
+
+    @Override
+    public boolean deleteUser(Long id) {
+        return userRepository.deleteUser(id);
+    }
 }

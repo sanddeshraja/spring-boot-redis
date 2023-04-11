@@ -7,16 +7,17 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public class UserRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository {
     @Autowired
     private RedisTemplate redisTemplate;
-    private static final  String KEY ="USER";
+    private static final String KEY = "USER";
+
     @Override
     public boolean saveUser(User user) {
-        try{
-            redisTemplate.opsForHash().put(KEY,user.getId().toString(),user);
+        try {
+            redisTemplate.opsForHash().put(KEY, user.getId().toString(), user);
             return true;
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -24,8 +25,26 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public List<User> fetchAllUser() {
-       List<User> users;
-       users= redisTemplate.opsForHash().values(KEY);
-       return  users;
+        List<User> users;
+        users = redisTemplate.opsForHash().values(KEY);
+        return users;
+    }
+
+    @Override
+    public User fetchUserById(Long id) {
+        User user;
+        user = (User) redisTemplate.opsForHash().get(KEY, id.toString());
+        return user;
+    }
+
+    @Override
+    public boolean deleteUser(Long id) {
+        try {
+            redisTemplate.opsForHash().delete(KEY, id.toString());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
